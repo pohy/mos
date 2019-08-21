@@ -141,7 +141,7 @@ func (rc *ROMClient) connect() error {
 		common.Reportf("Connecting to %s ROM, attempt %d of %d%s...", rc.ct, i, numConnectAttempts, is)
 		mFalse := rc.inverted
 		mTrue := !rc.inverted
-		rc.sc.SetRTSDTR(mTrue, mFalse)
+		rc.sc.SetRTSDTR(mFalse, mTrue)
 		// If you are wondering why ESP32 delays are like this, read this and weep:
 		// https://github.com/espressif/esptool/blob/96698a3da9acc6e357741663830f97524b688ade/esptool.py#L286
 		if rc.ct == esp.ChipESP8266 {
@@ -149,13 +149,13 @@ func (rc *ROMClient) connect() error {
 		} else {
 			time.Sleep(1200 * time.Millisecond)
 		}
-		rc.sc.SetRTSDTR(mFalse, mTrue)
+		rc.sc.SetRTSDTR(mTrue, mFalse)
 		if rc.ct == esp.ChipESP8266 {
 			time.Sleep(100 * time.Millisecond)
 		} else {
 			time.Sleep(400 * time.Millisecond)
 		}
-		rc.sc.SetRTSDTR(mFalse, mFalse)
+		rc.sc.SetRTSDTR(mTrue, mFalse)
 		err := rc.sync()
 		if err == nil {
 			rc.connected = true
@@ -434,10 +434,10 @@ func (rc *ROMClient) BootFirmware() error {
 	}
 	mFalse := rc.inverted
 	mTrue := !rc.inverted
-	rc.sc.SetDTR(mFalse) // Pull up GPIO0
-	rc.sc.SetRTS(mTrue)  // Reset
+	// rc.sc.SetDTR(mFalse) // Pull up GPIO0
+	rc.sc.SetDTR(mTrue)  // Reset
 	time.Sleep(50 * time.Millisecond)
-	rc.sc.SetRTS(mFalse) // Boot
+	rc.sc.SetDTR(mFalse) // Boot
 	return nil
 }
 

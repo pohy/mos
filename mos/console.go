@@ -282,8 +282,8 @@ func console(ctx context.Context, devConn dev.DevConn) error {
 		}
 		if *flags.SetControlLines || *flags.InvertedControlLines {
 			bFalse := *flags.InvertedControlLines
+			// sp.SetDTR(bFalse)
 			sp.SetDTR(bFalse)
-			sp.SetRTS(bFalse)
 		}
 		defer sp.Close()
 		r, w = sp, sp
